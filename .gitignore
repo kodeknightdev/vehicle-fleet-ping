@@ -1,0 +1,21 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.vscode/
+*.swp
+
+# Node / Angular
+node_modules/
+dist/
+tmp/
+out-tsc/
+npm-debug.log
+yarn-error.log
+coverage/
+
+# Env
+.env
+.DS_Store
