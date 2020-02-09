@@ -1,5 +1,7 @@
+using FleetPing.Api.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,6 +19,9 @@ namespace FleetPing.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<FleetContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("Fleet")));
+
             services.AddControllers();
         }
 
