@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using FleetPing.Api.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,7 +23,8 @@ namespace FleetPing.Api
             services.AddDbContext<FleetContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("Fleet")));
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
