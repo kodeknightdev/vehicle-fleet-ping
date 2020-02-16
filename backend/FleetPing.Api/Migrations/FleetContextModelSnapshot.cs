@@ -60,6 +60,9 @@ namespace FleetPing.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Plate")
+                        .IsUnique();
+
                     b.ToTable("Vehicles");
                 });
 #pragma warning restore 612, 618

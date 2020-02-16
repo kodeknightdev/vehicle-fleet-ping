@@ -18,6 +18,8 @@ namespace FleetPing.Api.Data
                 e.Property(v => v.Status)
                     .HasConversion<string>()
                     .HasMaxLength(16);
+
+                e.HasIndex(v => v.Plate).IsUnique();
             });
         }
     }
