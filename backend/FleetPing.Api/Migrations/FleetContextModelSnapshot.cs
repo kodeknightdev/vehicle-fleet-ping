@@ -19,6 +19,45 @@ namespace FleetPing.Api.Migrations
                 .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            modelBuilder.Entity("FleetPing.Api.Models.MaintenanceLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("numeric(10,2)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Mechanic")
+                        .HasColumnType("character varying(80)")
+                        .HasMaxLength(80);
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("character varying(1000)")
+                        .HasMaxLength(1000);
+
+                    b.Property<int>("OdometerKm")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)")
+                        .HasMaxLength(20);
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VehicleId", "Date");
+
+                    b.ToTable("MaintenanceLogs");
+                });
+
             modelBuilder.Entity("FleetPing.Api.Models.Vehicle", b =>
                 {
                     b.Property<int>("Id")
@@ -64,6 +103,15 @@ namespace FleetPing.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("Vehicles");
+                });
+
+            modelBuilder.Entity("FleetPing.Api.Models.MaintenanceLog", b =>
+                {
+                    b.HasOne("FleetPing.Api.Models.Vehicle", "Vehicle")
+                        .WithMany("MaintenanceLogs")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

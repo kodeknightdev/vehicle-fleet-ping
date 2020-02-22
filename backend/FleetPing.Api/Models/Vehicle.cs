@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace FleetPing.Api.Models
 {
@@ -28,5 +30,8 @@ namespace FleetPing.Api.Models
         public VehicleStatus Status { get; set; } = VehicleStatus.Active;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        [JsonIgnore]
+        public ICollection<MaintenanceLog> MaintenanceLogs { get; set; } = new List<MaintenanceLog>();
     }
 }
