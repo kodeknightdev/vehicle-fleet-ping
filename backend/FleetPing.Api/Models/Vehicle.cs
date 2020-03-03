@@ -24,7 +24,7 @@ namespace FleetPing.Api.Models
         [Range(1980, 2100)]
         public int Year { get; set; }
 
-        [Range(1, int.MaxValue)]
+        [Range(0, int.MaxValue)]
         public int OdometerKm { get; set; }
 
         public VehicleStatus Status { get; set; } = VehicleStatus.Active;
