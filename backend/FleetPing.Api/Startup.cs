@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using FleetPing.Api.Data;
+using FleetPing.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,8 @@ namespace FleetPing.Api
         {
             services.AddDbContext<FleetContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("Fleet")));
+
+            services.AddSingleton<IPositionService, MockPositionService>();
 
             services.AddControllers()
                 .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
