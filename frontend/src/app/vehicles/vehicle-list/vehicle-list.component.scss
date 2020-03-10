@@ -1,0 +1,27 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.num {
+  text-align: right;
+}
+
+.status {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #eee;
+}
+
+.status-Active { background: #d8f3dc; }
+.status-InShop { background: #ffe8cc; }
+.status-Retired { background: #e9ecef; color: #777; }
+
+.error { color: #c0392b; }
