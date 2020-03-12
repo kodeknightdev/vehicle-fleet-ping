@@ -16,7 +16,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let v of vehicles">
-      <td>{{ v.name }}</td>
+      <td><a [routerLink]="['/vehicles', v.id]">{{ v.name }}</a></td>
       <td>{{ v.plate }}</td>
       <td>{{ v.make }} {{ v.model }}</td>
       <td>{{ v.year }}</td>

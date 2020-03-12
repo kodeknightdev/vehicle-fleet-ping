@@ -1,0 +1,18 @@
+<a routerLink="/vehicles">&larr; All vehicles</a>
+
+<p class="error" *ngIf="error">{{ error }}</p>
+
+<ng-container *ngIf="vehicle">
+  <h2>{{ vehicle.name }} <small>{{ vehicle.plate }}</small></h2>
+
+  <dl class="facts">
+    <dt>Make / model</dt>
+    <dd>{{ vehicle.make }} {{ vehicle.model }}</dd>
+    <dt>Year</dt>
+    <dd>{{ vehicle.year }}</dd>
+    <dt>Odometer</dt>
+    <dd>{{ vehicle.odometerKm | number }} km</dd>
+    <dt>Status</dt>
+    <dd>{{ vehicle.status }}</dd>
+  </dl>
+</ng-container>
