@@ -12,6 +12,8 @@ namespace FleetPing.Api
 {
     public class Startup
     {
+        private const string FrontendCors = "frontend";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -23,6 +25,18 @@ namespace FleetPing.Api
         {
             services.AddDbContext<FleetContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("Fleet")));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(FrontendCors, policy =>
+                {
+                    var origins = Configuration.GetSection("Cors:Origins").Get<string[]>()
+                        ?? new[] { "http://localhost:4200" };
+                    policy.WithOrigins(origins)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
 
             services.AddSingleton<IPositionService, MockPositionService>();
 
@@ -38,6 +52,8 @@ namespace FleetPing.Api
             }
 
             app.UseRouting();
+
+            app.UseCors(FrontendCors);
 
             app.UseAuthorization();
 
