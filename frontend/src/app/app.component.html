@@ -1,2 +1,10 @@
-<h1>{{ title }}</h1>
-<router-outlet></router-outlet>
+<header class="topbar">
+  <a class="brand" routerLink="/">FleetPing</a>
+  <nav>
+    <a routerLink="/vehicles" routerLinkActive="active">Vehicles</a>
+  </nav>
+</header>
+
+<main class="content">
+  <router-outlet></router-outlet>
+</main>
