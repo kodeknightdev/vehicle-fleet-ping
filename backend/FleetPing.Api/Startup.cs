@@ -1,6 +1,9 @@
 using System.Text.Json.Serialization;
+using FleetPing.Api.Auth;
 using FleetPing.Api.Data;
 using FleetPing.Api.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +41,17 @@ namespace FleetPing.Api
                 });
             });
 
+            services.Configure<BasicAuthOptions>(Configuration.GetSection(BasicAuthOptions.Section));
+            services.AddAuthentication(BasicAuthenticationHandler.SchemeName)
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>(BasicAuthenticationHandler.SchemeName, null);
+            services.AddAuthorization(options =>
+            {
+                // everything requires a login unless marked [AllowAnonymous]
+                options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
+
             services.AddSingleton<IPositionService, MockPositionService>();
 
             services.AddControllers()
@@ -55,6 +69,7 @@ namespace FleetPing.Api
 
             app.UseCors(FrontendCors);
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
