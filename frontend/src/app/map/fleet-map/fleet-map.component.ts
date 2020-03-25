@@ -6,6 +6,15 @@ import { PositionService } from '../../services/position.service';
 
 const DEPOT: L.LatLngTuple = [45.548, -122.661];
 
+// Leaflet guesses icon urls from its css, which breaks once the cli bundles it.
+// Point it at the images copied in angular.json instead.
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: 'assets/leaflet/marker-icon.png',
+  iconRetinaUrl: 'assets/leaflet/marker-icon-2x.png',
+  shadowUrl: 'assets/leaflet/marker-shadow.png'
+});
+
 @Component({
   selector: 'app-fleet-map',
   templateUrl: './fleet-map.component.html',
