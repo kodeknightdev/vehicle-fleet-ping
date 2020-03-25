@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { FleetMapComponent } from './map/fleet-map/fleet-map.component';
 import { VehicleDetailComponent } from './vehicles/vehicle-detail/vehicle-detail.component';
 import { VehicleListComponent } from './vehicles/vehicle-list/vehicle-list.component';
 
@@ -11,7 +12,8 @@ import { VehicleListComponent } from './vehicles/vehicle-list/vehicle-list.compo
   declarations: [
     AppComponent,
     VehicleListComponent,
-    VehicleDetailComponent
+    VehicleDetailComponent,
+    FleetMapComponent
   ],
   imports: [
     BrowserModule,
