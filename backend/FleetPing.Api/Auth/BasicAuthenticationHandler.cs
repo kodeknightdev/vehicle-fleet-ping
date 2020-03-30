@@ -45,9 +45,15 @@ namespace FleetPing.Api.Auth
                 }
 
                 var raw = Encoding.UTF8.GetString(Convert.FromBase64String(header.Parameter ?? string.Empty));
-                var parts = raw.Split(':');
-                username = parts[0];
-                password = parts[1];
+                // passwords may contain ':' so only split on the first one
+                var sep = raw.IndexOf(':');
+                if (sep < 0)
+                {
+                    return Task.FromResult(AuthenticateResult.Fail("Invalid Authorization header"));
+                }
+
+                username = raw.Substring(0, sep);
+                password = raw.Substring(sep + 1);
             }
             catch (Exception)
             {
