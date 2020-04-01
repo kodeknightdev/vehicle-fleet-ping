@@ -1,0 +1,25 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid #eee;
+}
+
+tfoot td {
+  font-weight: 600;
+  border-bottom: none;
+}
+
+.num { text-align: right; }
+.notes { color: #555; max-width: 280px; }
+.muted { color: #888; }

@@ -15,4 +15,8 @@
     <dt>Status</dt>
     <dd>{{ vehicle.status }}</dd>
   </dl>
+
+  <section class="card">
+    <app-maintenance-list [vehicleId]="vehicle.id"></app-maintenance-list>
+  </section>
 </ng-container>

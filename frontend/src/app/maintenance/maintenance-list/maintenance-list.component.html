@@ -1,0 +1,37 @@
+<div class="header">
+  <h3>Maintenance log</h3>
+</div>
+
+<p *ngIf="loading">Loading…</p>
+
+<table *ngIf="!loading && logs.length">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Type</th>
+      <th class="num">Odometer</th>
+      <th class="num">Cost</th>
+      <th>Mechanic</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let log of logs">
+      <td>{{ log.date | date:'mediumDate' }}</td>
+      <td>{{ log.type }}</td>
+      <td class="num">{{ log.odometerKm | number }}</td>
+      <td class="num">{{ log.cost | currency }}</td>
+      <td>{{ log.mechanic }}</td>
+      <td class="notes">{{ log.notes }}</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3">Total</td>
+      <td class="num">{{ totalCost | currency }}</td>
+      <td colspan="2"></td>
+    </tr>
+  </tfoot>
+</table>
+
+<p *ngIf="!loading && !logs.length" class="muted">No maintenance recorded yet.</p>
