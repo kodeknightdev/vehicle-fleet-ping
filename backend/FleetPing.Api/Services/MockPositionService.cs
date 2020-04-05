@@ -6,9 +6,9 @@ using FleetPing.Api.Models;
 namespace FleetPing.Api.Services
 {
     /// <summary>
-    /// Stand-in until the trackers are wired up. Scatters vehicles around the depot.
+    /// Fallback for vehicles that have never reported. Scatters them around the depot.
     /// </summary>
-    public class MockPositionService : IPositionService
+    public class MockPositionService
     {
         // Depot, NE Portland
         public const double DepotLat = 45.5480;

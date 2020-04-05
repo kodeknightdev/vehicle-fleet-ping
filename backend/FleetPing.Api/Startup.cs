@@ -52,7 +52,8 @@ namespace FleetPing.Api
                     .Build();
             });
 
-            services.AddSingleton<IPositionService, MockPositionService>();
+            services.AddSingleton<MockPositionService>();
+            services.AddScoped<IPositionService, TrackedPositionService>();
 
             services.AddControllers()
                 .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));

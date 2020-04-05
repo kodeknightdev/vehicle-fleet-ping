@@ -13,6 +13,8 @@ namespace FleetPing.Api.Data
 
         public DbSet<MaintenanceLog> MaintenanceLogs { get; set; }
 
+        public DbSet<GpsPing> GpsPings { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Vehicle>(e =>
@@ -36,6 +38,16 @@ namespace FleetPing.Api.Data
                     .OnDelete(DeleteBehavior.Cascade);
 
                 e.HasIndex(m => new { m.VehicleId, m.Date });
+            });
+
+            modelBuilder.Entity<GpsPing>(e =>
+            {
+                e.HasOne<Vehicle>()
+                    .WithMany()
+                    .HasForeignKey(p => p.VehicleId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasIndex(p => new { p.VehicleId, p.RecordedAt });
             });
         }
     }

@@ -29,7 +29,7 @@ namespace FleetPing.Api.Controllers
                 .Where(v => v.Status != VehicleStatus.Retired)
                 .ToListAsync();
 
-            return Ok(_positions.GetLastKnown(vehicles));
+            return Ok(await _positions.GetLastKnownAsync(vehicles));
         }
 
         [HttpGet("api/vehicles/{id:int}/position")]
@@ -41,7 +41,7 @@ namespace FleetPing.Api.Controllers
                 return NotFound();
             }
 
-            return _positions.GetLastKnown(vehicle);
+            return await _positions.GetLastKnownAsync(vehicle);
         }
     }
 }

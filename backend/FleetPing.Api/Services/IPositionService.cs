@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FleetPing.Api.Models;
 
 namespace FleetPing.Api.Services
 {
     public interface IPositionService
     {
-        VehiclePosition GetLastKnown(Vehicle vehicle);
+        Task<VehiclePosition> GetLastKnownAsync(Vehicle vehicle);
 
-        IEnumerable<VehiclePosition> GetLastKnown(IEnumerable<Vehicle> vehicles);
+        Task<IList<VehiclePosition>> GetLastKnownAsync(IList<Vehicle> vehicles);
     }
 }
