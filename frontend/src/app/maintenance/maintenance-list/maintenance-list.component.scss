@@ -23,3 +23,10 @@ tfoot td {
 .num { text-align: right; }
 .notes { color: #555; max-width: 280px; }
 .muted { color: #888; }
+
+.row-actions {
+  white-space: nowrap;
+
+  a { margin-left: 8px; }
+  .danger { color: #c0392b; }
+}

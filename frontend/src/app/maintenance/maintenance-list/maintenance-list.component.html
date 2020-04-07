@@ -1,6 +1,16 @@
 <div class="header">
   <h3>Maintenance log</h3>
+  <button *ngIf="!showForm" (click)="add()">Add entry</button>
 </div>
+
+<app-maintenance-form
+  *ngIf="showForm"
+  [vehicleId]="vehicleId"
+  [log]="editing"
+  [currentOdometer]="currentOdometer"
+  (saved)="onSaved($event)"
+  (cancelled)="closeForm()">
+</app-maintenance-form>
 
 <p *ngIf="loading">Loading…</p>
 
@@ -13,6 +23,7 @@
       <th class="num">Cost</th>
       <th>Mechanic</th>
       <th>Notes</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -23,13 +34,17 @@
       <td class="num">{{ log.cost | currency }}</td>
       <td>{{ log.mechanic }}</td>
       <td class="notes">{{ log.notes }}</td>
+      <td class="row-actions">
+        <a href="" (click)="$event.preventDefault(); edit(log)">Edit</a>
+        <a href="" class="danger" (click)="$event.preventDefault(); remove(log)">Delete</a>
+      </td>
     </tr>
   </tbody>
   <tfoot>
     <tr>
       <td colspan="3">Total</td>
       <td class="num">{{ totalCost | currency }}</td>
-      <td colspan="2"></td>
+      <td colspan="3"></td>
     </tr>
   </tfoot>
 </table>

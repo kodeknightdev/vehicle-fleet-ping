@@ -1,0 +1,46 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="log-form">
+  <h4>{{ isEdit ? 'Edit entry' : 'New entry' }}</h4>
+
+  <div class="grid">
+    <label>
+      Date
+      <input type="date" formControlName="date">
+    </label>
+
+    <label>
+      Type
+      <select formControlName="type">
+        <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+      </select>
+    </label>
+
+    <label>
+      Odometer (km)
+      <input type="number" formControlName="odometerKm" min="0">
+      <span class="invalid" *ngIf="form.get('odometerKm').touched && form.get('odometerKm').invalid">Required, 0 or more</span>
+    </label>
+
+    <label>
+      Cost
+      <input type="number" formControlName="cost" min="0" step="0.01">
+      <span class="invalid" *ngIf="form.get('cost').touched && form.get('cost').invalid">Required, 0 or more</span>
+    </label>
+
+    <label>
+      Mechanic / shop
+      <input type="text" formControlName="mechanic">
+    </label>
+  </div>
+
+  <label class="notes">
+    Notes
+    <textarea rows="3" formControlName="notes"></textarea>
+  </label>
+
+  <p class="error" *ngIf="error">{{ error }}</p>
+
+  <div class="actions">
+    <button type="submit" [disabled]="saving">{{ saving ? 'Saving…' : 'Save' }}</button>
+    <button type="button" class="secondary" (click)="cancelled.emit()">Cancel</button>
+  </div>
+</form>
