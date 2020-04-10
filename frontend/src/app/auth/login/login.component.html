@@ -1,0 +1,15 @@
+<div class="login card">
+  <h2>Sign in</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      Username
+      <input type="text" formControlName="username" autocomplete="username" autofocus>
+    </label>
+    <label>
+      Password
+      <input type="password" formControlName="password" autocomplete="current-password">
+    </label>
+    <p class="error" *ngIf="error">{{ error }}</p>
+    <button type="submit" [disabled]="busy || form.invalid">{{ busy ? 'Signing in…' : 'Sign in' }}</button>
+  </form>
+</div>

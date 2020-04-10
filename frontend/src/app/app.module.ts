@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LoginComponent } from './auth/login/login.component';
 import { MaintenanceFormComponent } from './maintenance/maintenance-form/maintenance-form.component';
 import { MaintenanceListComponent } from './maintenance/maintenance-list/maintenance-list.component';
 import { FleetMapComponent } from './map/fleet-map/fleet-map.component';
@@ -18,7 +19,8 @@ import { VehicleListComponent } from './vehicles/vehicle-list/vehicle-list.compo
     VehicleDetailComponent,
     FleetMapComponent,
     MaintenanceListComponent,
-    MaintenanceFormComponent
+    MaintenanceFormComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
