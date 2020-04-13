@@ -52,6 +52,8 @@ namespace FleetPing.Api
                     .Build();
             });
 
+            services.AddScoped<IVehicleService, VehicleService>();
+            services.AddScoped<IMaintenanceService, MaintenanceService>();
             services.AddSingleton<MockPositionService>();
             services.AddScoped<IPositionService, TrackedPositionService>();
 

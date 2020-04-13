@@ -18,11 +18,9 @@ namespace FleetPing.Api.Models
 
         public MaintenanceType Type { get; set; }
 
-        [Range(0, int.MaxValue)]
         public int OdometerKm { get; set; }
 
         [Column(TypeName = "numeric(10,2)")]
-        [Range(0, 1000000)]
         public decimal Cost { get; set; }
 
         [MaxLength(80)]

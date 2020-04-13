@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace FleetPing.Api.Models
 {
@@ -21,17 +20,14 @@ namespace FleetPing.Api.Models
         [MaxLength(40)]
         public string Model { get; set; }
 
-        [Range(1980, 2100)]
         public int Year { get; set; }
 
-        [Range(0, int.MaxValue)]
         public int OdometerKm { get; set; }
 
         public VehicleStatus Status { get; set; } = VehicleStatus.Active;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        [JsonIgnore]
         public ICollection<MaintenanceLog> MaintenanceLogs { get; set; } = new List<MaintenanceLog>();
     }
 }

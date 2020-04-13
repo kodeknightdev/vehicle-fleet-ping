@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using FleetPing.Api.Data;
+using FleetPing.Api.Dtos;
 using FleetPing.Api.Models;
+using FleetPing.Api.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace FleetPing.Api.Controllers
 {
@@ -12,33 +11,29 @@ namespace FleetPing.Api.Controllers
     [Route("api/vehicles/{vehicleId:int}/maintenance")]
     public class MaintenanceLogsController : ControllerBase
     {
-        private readonly FleetContext _db;
+        private readonly IMaintenanceService _maintenance;
 
-        public MaintenanceLogsController(FleetContext db)
+        public MaintenanceLogsController(IMaintenanceService maintenance)
         {
-            _db = db;
+            _maintenance = maintenance;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MaintenanceLog>>> GetAll(int vehicleId)
         {
-            if (!await _db.Vehicles.AnyAsync(v => v.Id == vehicleId))
+            var logs = await _maintenance.ListAsync(vehicleId);
+            if (logs == null)
             {
                 return NotFound();
             }
 
-            return await _db.MaintenanceLogs
-                .AsNoTracking()
-                .Where(m => m.VehicleId == vehicleId)
-                .OrderByDescending(m => m.Date)
-                .ToListAsync();
+            return Ok(logs);
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<MaintenanceLog>> Get(int vehicleId, int id)
         {
-            var log = await _db.MaintenanceLogs
-                .FirstOrDefaultAsync(m => m.VehicleId == vehicleId && m.Id == id);
+            var log = await _maintenance.GetAsync(vehicleId, id);
             if (log == null)
             {
                 return NotFound();
@@ -48,63 +43,27 @@ namespace FleetPing.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<MaintenanceLog>> Create(int vehicleId, MaintenanceLog log)
+        public async Task<ActionResult<MaintenanceLog>> Create(int vehicleId, MaintenanceLogInput input)
         {
-            var vehicle = await _db.Vehicles.FindAsync(vehicleId);
-            if (vehicle == null)
+            var log = await _maintenance.CreateAsync(vehicleId, input);
+            if (log == null)
             {
                 return NotFound();
             }
-
-            log.Id = 0;
-            log.VehicleId = vehicleId;
-            _db.MaintenanceLogs.Add(log);
-
-            // keep the vehicle odometer in sync with the latest reading
-            if (log.OdometerKm > vehicle.OdometerKm)
-            {
-                vehicle.OdometerKm = log.OdometerKm;
-            }
-
-            await _db.SaveChangesAsync();
 
             return CreatedAtAction(nameof(Get), new { vehicleId, id = log.Id }, log);
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int vehicleId, int id, MaintenanceLog input)
+        public async Task<IActionResult> Update(int vehicleId, int id, MaintenanceLogInput input)
         {
-            var log = await _db.MaintenanceLogs
-                .FirstOrDefaultAsync(m => m.VehicleId == vehicleId && m.Id == id);
-            if (log == null)
-            {
-                return NotFound();
-            }
-
-            log.Date = input.Date;
-            log.Type = input.Type;
-            log.OdometerKm = input.OdometerKm;
-            log.Cost = input.Cost;
-            log.Mechanic = input.Mechanic;
-            log.Notes = input.Notes;
-
-            await _db.SaveChangesAsync();
-            return NoContent();
+            return await _maintenance.UpdateAsync(vehicleId, id, input) ? NoContent() : (IActionResult)NotFound();
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int vehicleId, int id)
         {
-            var log = await _db.MaintenanceLogs
-                .FirstOrDefaultAsync(m => m.VehicleId == vehicleId && m.Id == id);
-            if (log == null)
-            {
-                return NotFound();
-            }
-
-            _db.MaintenanceLogs.Remove(log);
-            await _db.SaveChangesAsync();
-            return NoContent();
+            return await _maintenance.DeleteAsync(vehicleId, id) ? NoContent() : (IActionResult)NotFound();
         }
     }
 }

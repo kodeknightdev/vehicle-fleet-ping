@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using FleetPing.Api.Data;
-using FleetPing.Api.Models;
+using FleetPing.Api.Dtos;
+using FleetPing.Api.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace FleetPing.Api.Controllers
 {
@@ -12,26 +10,23 @@ namespace FleetPing.Api.Controllers
     [Route("api/vehicles")]
     public class VehiclesController : ControllerBase
     {
-        private readonly FleetContext _db;
+        private readonly IVehicleService _vehicles;
 
-        public VehiclesController(FleetContext db)
+        public VehiclesController(IVehicleService vehicles)
         {
-            _db = db;
+            _vehicles = vehicles;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Vehicle>>> GetAll()
+        public async Task<ActionResult<IEnumerable<VehicleDto>>> GetAll()
         {
-            return await _db.Vehicles
-                .AsNoTracking()
-                .OrderBy(v => v.Name)
-                .ToListAsync();
+            return Ok(await _vehicles.ListAsync());
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Vehicle>> Get(int id)
+        public async Task<ActionResult<VehicleDto>> Get(int id)
         {
-            var vehicle = await _db.Vehicles.FindAsync(id);
+            var vehicle = await _vehicles.GetAsync(id);
             if (vehicle == null)
             {
                 return NotFound();
@@ -41,48 +36,22 @@ namespace FleetPing.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Vehicle>> Create(Vehicle vehicle)
+        public async Task<ActionResult<VehicleDto>> Create(VehicleInput input)
         {
-            vehicle.Id = 0;
-            _db.Vehicles.Add(vehicle);
-            await _db.SaveChangesAsync();
-
+            var vehicle = await _vehicles.CreateAsync(input);
             return CreatedAtAction(nameof(Get), new { id = vehicle.Id }, vehicle);
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, Vehicle input)
+        public async Task<IActionResult> Update(int id, VehicleInput input)
         {
-            var vehicle = await _db.Vehicles.FindAsync(id);
-            if (vehicle == null)
-            {
-                return NotFound();
-            }
-
-            vehicle.Name = input.Name;
-            vehicle.Plate = input.Plate;
-            vehicle.Make = input.Make;
-            vehicle.Model = input.Model;
-            vehicle.Year = input.Year;
-            vehicle.OdometerKm = input.OdometerKm;
-            vehicle.Status = input.Status;
-
-            await _db.SaveChangesAsync();
-            return NoContent();
+            return await _vehicles.UpdateAsync(id, input) ? NoContent() : (IActionResult)NotFound();
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var vehicle = await _db.Vehicles.FindAsync(id);
-            if (vehicle == null)
-            {
-                return NotFound();
-            }
-
-            _db.Vehicles.Remove(vehicle);
-            await _db.SaveChangesAsync();
-            return NoContent();
+            return await _vehicles.DeleteAsync(id) ? NoContent() : (IActionResult)NotFound();
         }
     }
 }
