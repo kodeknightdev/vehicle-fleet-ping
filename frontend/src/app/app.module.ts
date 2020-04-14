@@ -1,10 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AuthInterceptor } from './auth/auth.interceptor';
 import { LoginComponent } from './auth/login/login.component';
 import { MaintenanceFormComponent } from './maintenance/maintenance-form/maintenance-form.component';
 import { MaintenanceListComponent } from './maintenance/maintenance-list/maintenance-list.component';
@@ -28,7 +29,9 @@ import { VehicleListComponent } from './vehicles/vehicle-list/vehicle-list.compo
     ReactiveFormsModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

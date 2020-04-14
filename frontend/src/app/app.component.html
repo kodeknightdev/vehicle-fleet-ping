@@ -1,9 +1,13 @@
 <header class="topbar">
   <a class="brand" routerLink="/">FleetPing</a>
-  <nav>
+  <nav *ngIf="user$ | async">
     <a routerLink="/map" routerLinkActive="active">Map</a>
     <a routerLink="/vehicles" routerLinkActive="active">Vehicles</a>
   </nav>
+  <div class="user" *ngIf="user$ | async as user">
+    <span>{{ user.displayName }}</span>
+    <a href="" (click)="$event.preventDefault(); logout()">Sign out</a>
+  </div>
 </header>
 
 <main class="content">
