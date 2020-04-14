@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,13 +25,20 @@ namespace FleetPing.Api.Services
                 .OrderBy(v => v.Name)
                 .ToListAsync();
 
-            return vehicles.Select(VehicleDto.From).ToList();
+            var services = await LastServicesAsync(vehicles.Select(v => v.Id).ToList());
+            return vehicles.Select(v => ToDto(v, services)).ToList();
         }
 
         public async Task<VehicleDto> GetAsync(int id)
         {
             var vehicle = await _db.Vehicles.AsNoTracking().FirstOrDefaultAsync(v => v.Id == id);
-            return vehicle == null ? null : VehicleDto.From(vehicle);
+            if (vehicle == null)
+            {
+                return null;
+            }
+
+            var services = await LastServicesAsync(new List<int> { id });
+            return ToDto(vehicle, services);
         }
 
         public async Task<VehicleDto> CreateAsync(VehicleInput input)
@@ -66,6 +74,24 @@ namespace FleetPing.Api.Services
             _db.Vehicles.Remove(vehicle);
             await _db.SaveChangesAsync();
             return true;
+        }
+
+        private async Task<Dictionary<int, (int Km, DateTime Date)>> LastServicesAsync(IList<int> vehicleIds)
+        {
+            var rows = await _db.MaintenanceLogs
+                .Where(m => vehicleIds.Contains(m.VehicleId) && ServiceSchedule.ResetTypes.Contains(m.Type))
+                .GroupBy(m => m.VehicleId)
+                .Select(g => new { VehicleId = g.Key, Km = g.Max(m => m.OdometerKm), Date = g.Max(m => m.Date) })
+                .ToListAsync();
+
+            return rows.ToDictionary(r => r.VehicleId, r => (r.Km, r.Date));
+        }
+
+        private static VehicleDto ToDto(Vehicle v, Dictionary<int, (int Km, DateTime Date)> services)
+        {
+            return services.TryGetValue(v.Id, out var last)
+                ? VehicleDto.From(v, last.Km, last.Date)
+                : VehicleDto.From(v);
         }
     }
 }

@@ -24,6 +24,8 @@ namespace FleetPing.Api.Models
 
         public int OdometerKm { get; set; }
 
+        public int ServiceIntervalKm { get; set; } = 15000;
+
         public VehicleStatus Status { get; set; } = VehicleStatus.Active;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

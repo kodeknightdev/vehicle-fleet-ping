@@ -23,6 +23,9 @@ namespace FleetPing.Api.Dtos
         [Range(0, int.MaxValue)]
         public int OdometerKm { get; set; }
 
+        [Range(1000, 100000)]
+        public int ServiceIntervalKm { get; set; } = 15000;
+
         public VehicleStatus Status { get; set; } = VehicleStatus.Active;
 
         public void ApplyTo(Vehicle vehicle)
@@ -33,6 +36,7 @@ namespace FleetPing.Api.Dtos
             vehicle.Model = Model?.Trim();
             vehicle.Year = Year;
             vehicle.OdometerKm = OdometerKm;
+            vehicle.ServiceIntervalKm = ServiceIntervalKm;
             vehicle.Status = Status;
         }
     }

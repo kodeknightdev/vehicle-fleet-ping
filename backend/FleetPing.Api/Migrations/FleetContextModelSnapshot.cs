@@ -124,6 +124,9 @@ namespace FleetPing.Api.Migrations
                         .HasColumnType("character varying(16)")
                         .HasMaxLength(16);
 
+                    b.Property<int>("ServiceIntervalKm")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("character varying(16)")
