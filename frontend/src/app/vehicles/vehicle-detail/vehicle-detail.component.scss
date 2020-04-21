@@ -14,3 +14,19 @@ h2 small {
 }
 
 .error { color: #c0392b; }
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .actions {
+    display: flex;
+    gap: 8px;
+  }
+}
+
+.due {
+  color: #c0392b;
+  font-weight: 600;
+}

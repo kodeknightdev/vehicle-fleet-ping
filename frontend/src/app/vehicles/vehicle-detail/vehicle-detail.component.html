@@ -3,7 +3,13 @@
 <p class="error" *ngIf="error">{{ error }}</p>
 
 <ng-container *ngIf="vehicle">
-  <h2>{{ vehicle.name }} <small>{{ vehicle.plate }}</small></h2>
+  <div class="page-header">
+    <h2>{{ vehicle.name }} <small>{{ vehicle.plate }}</small></h2>
+    <div class="actions">
+      <a class="btn secondary" [routerLink]="['/vehicles', vehicle.id, 'edit']">Edit</a>
+      <button class="danger" (click)="remove()">Delete</button>
+    </div>
+  </div>
 
   <dl class="facts">
     <dt>Make / model</dt>
@@ -14,6 +20,20 @@
     <dd>{{ vehicle.odometerKm | number }} km</dd>
     <dt>Status</dt>
     <dd>{{ vehicle.status }}</dd>
+    <dt>Service interval</dt>
+    <dd>every {{ vehicle.serviceIntervalKm | number }} km</dd>
+    <dt>Last service</dt>
+    <dd>
+      <ng-container *ngIf="vehicle.lastServiceDate; else never">
+        {{ vehicle.lastServiceDate | date:'mediumDate' }} at {{ vehicle.lastServiceKm | number }} km
+      </ng-container>
+      <ng-template #never>none on record</ng-template>
+    </dd>
+    <dt>Next service</dt>
+    <dd [class.due]="vehicle.serviceDue">
+      at {{ vehicle.nextServiceKm | number }} km
+      ({{ vehicle.kmUntilService | number }} km to go)
+    </dd>
   </dl>
 
   <section class="card">

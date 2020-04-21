@@ -1,4 +1,7 @@
-<h2>Vehicles</h2>
+<div class="page-header">
+  <h2>Vehicles</h2>
+  <a class="btn" routerLink="/vehicles/new">Add vehicle</a>
+</div>
 
 <p *ngIf="loading">Loading…</p>
 <p class="error" *ngIf="error">{{ error }}</p>
@@ -12,6 +15,7 @@
       <th>Year</th>
       <th class="num">Odometer (km)</th>
       <th>Status</th>
+      <th>Next service</th>
     </tr>
   </thead>
   <tbody>
@@ -22,6 +26,10 @@
       <td>{{ v.year }}</td>
       <td class="num">{{ v.odometerKm | number }}</td>
       <td><span class="status" [ngClass]="'status-' + v.status">{{ v.status }}</span></td>
+      <td [class.due]="v.serviceDue">
+        <ng-container *ngIf="v.kmUntilService >= 0">in {{ v.kmUntilService | number }} km</ng-container>
+        <ng-container *ngIf="v.kmUntilService < 0">overdue {{ -v.kmUntilService | number }} km</ng-container>
+      </td>
     </tr>
   </tbody>
 </table>
