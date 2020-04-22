@@ -57,6 +57,9 @@ namespace FleetPing.Api
             services.AddSingleton<MockPositionService>();
             services.AddScoped<IPositionService, TrackedPositionService>();
 
+            services.Configure<SimulatorOptions>(Configuration.GetSection(SimulatorOptions.Section));
+            services.AddHostedService<GpsSimulator>();
+
             services.AddControllers()
                 .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         }
