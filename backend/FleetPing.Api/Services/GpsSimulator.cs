@@ -96,6 +96,7 @@ namespace FleetPing.Api.Services
             var speed = _rng.NextDouble() < 0.15 ? 0 : 20 + _rng.NextDouble() * 40;
             var distanceKm = speed * _options.IntervalSeconds / 3600.0;
             var (newLat, newLng) = Move(lat, lng, heading, distanceKm);
+            var now = DateTime.UtcNow;
 
             return new GpsPing
             {
@@ -104,8 +105,8 @@ namespace FleetPing.Api.Services
                 Longitude = Math.Round(newLng, 6),
                 SpeedKph = Math.Round(speed, 1),
                 HeadingDeg = Math.Round(heading),
-                RecordedAt = DateTime.Now,
-                ReceivedAt = DateTime.Now
+                RecordedAt = now,
+                ReceivedAt = now
             };
         }
 
