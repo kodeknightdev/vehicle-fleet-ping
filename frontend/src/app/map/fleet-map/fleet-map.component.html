@@ -1,2 +1,21 @@
-<h2>Live map</h2>
-<div class="map" #mapEl></div>
+<div class="map-page">
+  <aside class="side card">
+    <h3>Fleet</h3>
+    <p class="muted" *ngIf="lastUpdated">Updated {{ lastUpdated | date:'mediumTime' }}</p>
+    <ul>
+      <li *ngFor="let p of positions"
+          [class.selected]="p.vehicleId === selectedId"
+          (click)="focus(p)">
+        <span class="dot" [ngClass]="state(p)"></span>
+        <span class="name">{{ p.vehicleName }}</span>
+        <span class="meta">{{ p.speedKph | number:'1.0-0' }} km/h</span>
+      </li>
+    </ul>
+    <div class="legend">
+      <span><span class="dot moving"></span>Moving</span>
+      <span><span class="dot stopped"></span>Stopped</span>
+      <span><span class="dot stale"></span>No recent GPS</span>
+    </div>
+  </aside>
+  <div class="map" #mapEl></div>
+</div>
