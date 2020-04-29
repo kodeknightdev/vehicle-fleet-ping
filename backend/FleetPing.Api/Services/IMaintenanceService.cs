@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FleetPing.Api.Dtos;
@@ -8,7 +9,7 @@ namespace FleetPing.Api.Services
     public interface IMaintenanceService
     {
         /// <returns>null when the vehicle does not exist</returns>
-        Task<IList<MaintenanceLog>> ListAsync(int vehicleId);
+        Task<IList<MaintenanceLog>> ListAsync(int vehicleId, DateTime? from = null, DateTime? to = null, MaintenanceType? type = null);
 
         Task<MaintenanceLog> GetAsync(int vehicleId, int id);
 

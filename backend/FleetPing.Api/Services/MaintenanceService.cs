@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,17 +18,37 @@ namespace FleetPing.Api.Services
             _db = db;
         }
 
-        public async Task<IList<MaintenanceLog>> ListAsync(int vehicleId)
+        public async Task<IList<MaintenanceLog>> ListAsync(int vehicleId, DateTime? from = null, DateTime? to = null, MaintenanceType? type = null)
         {
             if (!await _db.Vehicles.AnyAsync(v => v.Id == vehicleId))
             {
                 return null;
             }
 
-            return await _db.MaintenanceLogs
+            var query = _db.MaintenanceLogs
                 .AsNoTracking()
-                .Where(m => m.VehicleId == vehicleId)
+                .Where(m => m.VehicleId == vehicleId);
+
+            if (from.HasValue)
+            {
+                query = query.Where(m => m.Date >= from.Value.Date);
+            }
+
+            if (to.HasValue)
+            {
+                // inclusive of the whole "to" day
+                var end = to.Value.Date.AddDays(1);
+                query = query.Where(m => m.Date < end);
+            }
+
+            if (type.HasValue)
+            {
+                query = query.Where(m => m.Type == type.Value);
+            }
+
+            return await query
                 .OrderByDescending(m => m.Date)
+                .ThenByDescending(m => m.Id)
                 .ToListAsync();
         }
 

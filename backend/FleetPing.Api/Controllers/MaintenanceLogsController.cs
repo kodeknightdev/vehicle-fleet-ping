@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FleetPing.Api.Dtos;
@@ -19,9 +20,13 @@ namespace FleetPing.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MaintenanceLog>>> GetAll(int vehicleId)
+        public async Task<ActionResult<IEnumerable<MaintenanceLog>>> GetAll(
+            int vehicleId,
+            [FromQuery] DateTime? from,
+            [FromQuery] DateTime? to,
+            [FromQuery] MaintenanceType? type)
         {
-            var logs = await _maintenance.ListAsync(vehicleId);
+            var logs = await _maintenance.ListAsync(vehicleId, from, to, type);
             if (logs == null)
             {
                 return NotFound();
