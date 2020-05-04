@@ -10,6 +10,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { MaintenanceFormComponent } from './maintenance/maintenance-form/maintenance-form.component';
 import { MaintenanceListComponent } from './maintenance/maintenance-list/maintenance-list.component';
 import { FleetMapComponent } from './map/fleet-map/fleet-map.component';
+import { VehicleTrailComponent } from './map/vehicle-trail/vehicle-trail.component';
 import { VehicleFormComponent } from './vehicles/vehicle-form/vehicle-form.component';
 import { VehicleDetailComponent } from './vehicles/vehicle-detail/vehicle-detail.component';
 import { VehicleListComponent } from './vehicles/vehicle-list/vehicle-list.component';
@@ -23,7 +24,8 @@ import { VehicleListComponent } from './vehicles/vehicle-list/vehicle-list.compo
     MaintenanceListComponent,
     MaintenanceFormComponent,
     LoginComponent,
-    VehicleFormComponent
+    VehicleFormComponent,
+    VehicleTrailComponent
   ],
   imports: [
     BrowserModule,

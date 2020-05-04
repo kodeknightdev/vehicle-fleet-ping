@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h3 { margin: 0; }
+}
+
+.ranges {
+  display: flex;
+  gap: 4px;
+
+  button { padding: 3px 10px; }
+}
+
+.muted { color: #777; font-size: 13px; }
+
+.map {
+  height: 340px;
+  border: 1px solid #d0d5db;
+  border-radius: 6px;
+}

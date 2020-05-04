@@ -37,6 +37,10 @@
   </dl>
 
   <section class="card">
+    <app-vehicle-trail [vehicleId]="vehicle.id"></app-vehicle-trail>
+  </section>
+
+  <section class="card">
     <app-maintenance-list [vehicleId]="vehicle.id" [currentOdometer]="vehicle.odometerKm"></app-maintenance-list>
   </section>
 </ng-container>

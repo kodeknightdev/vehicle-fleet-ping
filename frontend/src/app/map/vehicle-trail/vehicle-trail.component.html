@@ -1,0 +1,19 @@
+<div class="header">
+  <h3>GPS trail</h3>
+  <div class="ranges">
+    <button *ngFor="let h of ranges"
+            type="button"
+            [class.secondary]="h !== hours"
+            (click)="setRange(h)">{{ h }}h</button>
+  </div>
+</div>
+
+<p class="muted">
+  <ng-container *ngIf="loading">Loading…</ng-container>
+  <ng-container *ngIf="!loading && pings.length">
+    {{ pings.length }} pings, {{ distanceKm | number:'1.1-1' }} km travelled
+  </ng-container>
+  <ng-container *ngIf="!loading && !pings.length">No GPS data in the last {{ hours }}h.</ng-container>
+</p>
+
+<div class="map" #mapEl></div>
