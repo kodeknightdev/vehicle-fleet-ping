@@ -1,5 +1,7 @@
 using FleetPing.Api.Data;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -13,10 +15,17 @@ namespace FleetPing.Api
 
             using (var scope = host.Services.CreateScope())
             {
-                var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
-                if (env.IsDevelopment())
+                var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+                var db = scope.ServiceProvider.GetRequiredService<FleetContext>();
+
+                if (config.GetValue("MigrateOnStartup", true))
                 {
-                    DevSeeder.Seed(scope.ServiceProvider.GetRequiredService<FleetContext>());
+                    db.Database.Migrate();
+                }
+
+                if (config.GetValue<bool>("SeedDemoData"))
+                {
+                    DevSeeder.Seed(db);
                 }
             }
 

@@ -1,0 +1,33 @@
+version: "3.7"
+
+services:
+  db:
+    image: postgres:12.2-alpine
+    environment:
+      POSTGRES_DB: fleetping
+      POSTGRES_USER: fleet
+      POSTGRES_PASSWORD: fleet
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  api:
+    build: ./backend
+    depends_on:
+      - db
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Fleet: "Host=db;Port=5432;Database=fleetping;Username=fleet;Password=fleet"
+      SeedDemoData: "true"
+      Simulator__Enabled: "true"
+      Simulator__IntervalSeconds: "10"
+      Cors__Origins__0: "http://localhost:4200"
+      Auth__Users__0__Username: dispatch
+      Auth__Users__0__Password: dispatch
+      Auth__Users__0__DisplayName: Dispatch Desk
+    ports:
+      - "5000:80"
+
+volumes:
+  pgdata:
