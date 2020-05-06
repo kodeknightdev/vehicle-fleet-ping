@@ -1,6 +1,7 @@
 <header class="topbar">
   <a class="brand" routerLink="/">FleetPing</a>
   <nav *ngIf="user$ | async">
+    <a routerLink="/dashboard" routerLinkActive="active">Overview</a>
     <a routerLink="/map" routerLinkActive="active">Map</a>
     <a routerLink="/vehicles" routerLinkActive="active">Vehicles</a>
   </nav>

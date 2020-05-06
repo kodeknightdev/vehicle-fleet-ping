@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { LoginComponent } from './auth/login/login.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { MaintenanceFormComponent } from './maintenance/maintenance-form/maintenance-form.component';
 import { MaintenanceListComponent } from './maintenance/maintenance-list/maintenance-list.component';
 import { FleetMapComponent } from './map/fleet-map/fleet-map.component';
@@ -25,7 +26,8 @@ import { VehicleListComponent } from './vehicles/vehicle-list/vehicle-list.compo
     MaintenanceFormComponent,
     LoginComponent,
     VehicleFormComponent,
-    VehicleTrailComponent
+    VehicleTrailComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

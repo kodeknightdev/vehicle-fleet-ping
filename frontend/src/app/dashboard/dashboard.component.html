@@ -1,0 +1,59 @@
+<h2>Overview</h2>
+
+<p class="error" *ngIf="error">{{ error }}</p>
+
+<ng-container *ngIf="summary as s">
+  <div class="tiles">
+    <div class="tile card">
+      <span class="label">Vehicles</span>
+      <span class="value">{{ s.totalVehicles }}</span>
+      <span class="sub">{{ s.active }} active · {{ s.inShop }} in shop · {{ s.retired }} retired</span>
+    </div>
+    <div class="tile card">
+      <span class="label">Reporting GPS</span>
+      <span class="value">{{ s.reporting }} / {{ s.active }}</span>
+      <span class="sub">
+        last {{ s.reportingWindowMinutes }} min
+        <ng-container *ngIf="s.lastPingAt">· latest {{ s.lastPingAt | date:'shortTime' }}</ng-container>
+      </span>
+    </div>
+    <div class="tile card" [class.warn]="s.serviceDue.length">
+      <span class="label">Service due</span>
+      <span class="value">{{ s.serviceDue.length }}</span>
+      <span class="sub">within 1,000 km or overdue</span>
+    </div>
+    <div class="tile card">
+      <span class="label">Maintenance, 30 days</span>
+      <span class="value">{{ s.maintenanceCost30d | currency:'USD':'symbol':'1.0-0' }}</span>
+      <span class="sub">{{ s.maintenanceCount30d }} entries</span>
+    </div>
+  </div>
+
+  <section class="card">
+    <div class="section-header">
+      <h3>Due for service</h3>
+      <a routerLink="/map">Open live map &rarr;</a>
+    </div>
+    <table *ngIf="s.serviceDue.length; else allGood">
+      <thead>
+        <tr>
+          <th>Vehicle</th>
+          <th>Plate</th>
+          <th class="num">Odometer</th>
+          <th class="num">Service at</th>
+          <th class="num">Remaining</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let v of s.serviceDue">
+          <td><a [routerLink]="['/vehicles', v.id]">{{ v.name }}</a></td>
+          <td>{{ v.plate }}</td>
+          <td class="num">{{ v.odometerKm | number }}</td>
+          <td class="num">{{ v.nextServiceKm | number }}</td>
+          <td class="num" [class.overdue]="v.kmUntilService < 0">{{ v.kmUntilService | number }} km</td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #allGood><p class="muted">Nothing due. Nice.</p></ng-template>
+  </section>
+</ng-container>

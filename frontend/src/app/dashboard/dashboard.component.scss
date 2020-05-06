@@ -1,0 +1,43 @@
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+
+  .label { color: #666; font-size: 13px; }
+  .value { font-size: 28px; font-weight: 600; }
+  .sub { color: #888; font-size: 12px; }
+
+  &.warn .value { color: #c0392b; }
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h3 { margin: 0 0 8px; }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.num { text-align: right; }
+.overdue { color: #c0392b; font-weight: 600; }
+.muted { color: #888; }
+.error { color: #c0392b; }
