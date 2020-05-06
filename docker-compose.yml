@@ -9,11 +9,17 @@ services:
       POSTGRES_PASSWORD: fleet
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fleet -d fleetping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
     ports:
       - "5432:5432"
 
   api:
     build: ./backend
+    restart: unless-stopped
     depends_on:
       - db
     environment:
