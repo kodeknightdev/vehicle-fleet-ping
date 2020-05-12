@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { Vehicle, VEHICLE_STATUSES } from '../../models/vehicle';
-import { VehicleService } from '../../services/vehicle.service';
+import { VEHICLE_STATUSES, Vehicle } from '../../core/models';
+import { VehicleService } from '../../core/services';
 
 @Component({
   selector: 'app-vehicle-form',

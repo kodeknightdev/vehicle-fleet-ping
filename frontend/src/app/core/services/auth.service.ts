@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { environment } from '../../environments/environment';
+import { ApiService } from './api.service';
 
 export interface CurrentUser {
   username: string;
@@ -16,11 +16,13 @@ const USER_KEY = 'fp.user';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService extends ApiService {
   private userSubject = new BehaviorSubject<CurrentUser | null>(this.readUser());
   readonly user$ = this.userSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(http: HttpClient) {
+    super(http);
+  }
 
   get token(): string | null {
     return sessionStorage.getItem(TOKEN_KEY);
@@ -34,7 +36,7 @@ export class AuthService {
     const token = btoa(`${username}:${password}`);
     const headers = new HttpHeaders({ Authorization: `Basic ${token}` });
 
-    return this.http.get<CurrentUser>(`${environment.apiUrl}/auth/me`, { headers }).pipe(
+    return this.http.get<CurrentUser>(this.url('auth/me'), { headers }).pipe(
       tap(user => {
         sessionStorage.setItem(TOKEN_KEY, token);
         sessionStorage.setItem(USER_KEY, JSON.stringify(user));

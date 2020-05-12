@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 
-import { MaintenanceLog } from '../../models/maintenance-log';
-import { MaintenanceService } from '../../services/maintenance.service';
+import { MaintenanceLog } from '../../core/models';
+import { MaintenanceService } from '../../core/services';
 
 @Component({
   selector: 'app-maintenance-list',

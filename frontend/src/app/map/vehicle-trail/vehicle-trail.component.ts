@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 
-import { GpsPing } from '../../models/gps-ping';
-import { PositionService } from '../../services/position.service';
+import { GpsPing } from '../../core/models';
+import { PositionService } from '../../core/services';
 
 @Component({
   selector: 'app-vehicle-trail',

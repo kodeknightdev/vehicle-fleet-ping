@@ -3,8 +3,8 @@ import { interval } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import * as L from 'leaflet';
 
-import { VehiclePosition } from '../../models/vehicle-position';
-import { PositionService } from '../../services/position.service';
+import { VehiclePosition } from '../../core/models';
+import { PositionService } from '../../core/services';
 
 const DEPOT: L.LatLngTuple = [45.548, -122.661];
 const REFRESH_MS = 10000;

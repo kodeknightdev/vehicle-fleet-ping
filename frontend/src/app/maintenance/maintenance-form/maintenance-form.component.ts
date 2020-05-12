@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { MaintenanceLog, MAINTENANCE_TYPES } from '../../models/maintenance-log';
-import { MaintenanceService } from '../../services/maintenance.service';
+import { MAINTENANCE_TYPES, MaintenanceLog } from '../../core/models';
+import { MaintenanceService } from '../../core/services';
 
 @Component({
   selector: 'app-maintenance-form',
