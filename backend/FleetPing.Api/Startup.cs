@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace FleetPing.Api
 {
@@ -60,6 +61,27 @@ namespace FleetPing.Api
             services.Configure<SimulatorOptions>(Configuration.GetSection(SimulatorOptions.Section));
             services.AddHostedService<GpsSimulator>();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FleetPing API", Version = "v1" });
+                c.AddSecurityDefinition("basic", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "basic",
+                    Description = "Dispatch / workshop login"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "basic" }
+                        },
+                        new string[0]
+                    }
+                });
+            });
+
             services.AddControllers()
                 .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         }
@@ -69,6 +91,12 @@ namespace FleetPing.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            if (Configuration.GetValue("EnableSwagger", env.IsDevelopment()))
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FleetPing API v1"));
             }
 
             app.UseRouting();
