@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { interval } from 'rxjs';
-import { startWith, switchMap } from 'rxjs/operators';
+import { interval, Subject } from 'rxjs';
+import { startWith, switchMap, takeUntil } from 'rxjs/operators';
 import * as L from 'leaflet';
 
 import { VehiclePosition } from '../../core/models';
@@ -36,6 +36,7 @@ export class FleetMapComponent implements AfterViewInit, OnDestroy {
   private map: L.Map;
   private markers = new Map<number, L.CircleMarker>();
   private fitted = false;
+  private destroy$ = new Subject<void>();
 
   constructor(private positionService: PositionService) { }
 
@@ -50,7 +51,8 @@ export class FleetMapComponent implements AfterViewInit, OnDestroy {
 
     interval(REFRESH_MS).pipe(
       startWith(0),
-      switchMap(() => this.positionService.lastKnown())
+      switchMap(() => this.positionService.lastKnown()),
+      takeUntil(this.destroy$)
     ).subscribe(p => {
       this.positions = p;
       this.lastUpdated = new Date();
@@ -59,8 +61,12 @@ export class FleetMapComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // without this the poll kept running (and hitting a removed map) after leaving the page
+    this.destroy$.next();
+    this.destroy$.complete();
     if (this.map) {
       this.map.remove();
+      this.map = null;
     }
   }
 
