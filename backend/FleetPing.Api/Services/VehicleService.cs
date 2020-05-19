@@ -76,6 +76,12 @@ namespace FleetPing.Api.Services
             return true;
         }
 
+        public Task<bool> PlateInUseAsync(string plate, int? exceptId = null)
+        {
+            var normalized = plate.Trim().ToUpperInvariant();
+            return _db.Vehicles.AnyAsync(v => v.Plate == normalized && v.Id != exceptId);
+        }
+
         private async Task<Dictionary<int, (int Km, DateTime Date)>> LastServicesAsync(IList<int> vehicleIds)
         {
             var rows = await _db.MaintenanceLogs

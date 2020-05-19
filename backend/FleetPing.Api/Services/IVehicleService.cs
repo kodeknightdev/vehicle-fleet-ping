@@ -15,5 +15,7 @@ namespace FleetPing.Api.Services
         Task<bool> UpdateAsync(int id, VehicleInput input);
 
         Task<bool> DeleteAsync(int id);
+
+        Task<bool> PlateInUseAsync(string plate, int? exceptId = null);
     }
 }

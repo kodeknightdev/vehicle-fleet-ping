@@ -38,6 +38,11 @@ namespace FleetPing.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<VehicleDto>> Create(VehicleInput input)
         {
+            if (await _vehicles.PlateInUseAsync(input.Plate))
+            {
+                return PlateConflict(input.Plate);
+            }
+
             var vehicle = await _vehicles.CreateAsync(input);
             return CreatedAtAction(nameof(Get), new { id = vehicle.Id }, vehicle);
         }
@@ -45,6 +50,11 @@ namespace FleetPing.Api.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, VehicleInput input)
         {
+            if (await _vehicles.PlateInUseAsync(input.Plate, id))
+            {
+                return PlateConflict(input.Plate);
+            }
+
             return await _vehicles.UpdateAsync(id, input) ? NoContent() : (IActionResult)NotFound();
         }
 
@@ -52,6 +62,17 @@ namespace FleetPing.Api.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             return await _vehicles.DeleteAsync(id) ? NoContent() : (IActionResult)NotFound();
+        }
+
+        // was surfacing as a 500 from the unique index
+        private ConflictObjectResult PlateConflict(string plate)
+        {
+            return Conflict(new ProblemDetails
+            {
+                Title = "Plate already registered",
+                Detail = $"Another vehicle already uses plate {plate.Trim().ToUpperInvariant()}.",
+                Status = 409
+            });
         }
     }
 }
