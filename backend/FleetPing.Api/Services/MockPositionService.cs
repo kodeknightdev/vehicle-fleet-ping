@@ -16,7 +16,9 @@ namespace FleetPing.Api.Services
 
         public VehiclePosition GetLastKnown(Vehicle vehicle)
         {
-            var rng = new Random();
+            // seeded per vehicle so the fallback position stays put between refreshes
+            // instead of jumping around the map every poll
+            var rng = new Random(vehicle.Id * 7919);
 
             if (vehicle.Status != VehicleStatus.Active)
             {
@@ -25,7 +27,7 @@ namespace FleetPing.Api.Services
 
             var lat = DepotLat + (rng.NextDouble() - 0.5) * 0.12;
             var lng = DepotLng + (rng.NextDouble() - 0.5) * 0.18;
-            return Build(vehicle, lat, lng, rng.Next(0, 80), rng.Next(0, 360));
+            return Build(vehicle, lat, lng, 0, rng.Next(0, 360));
         }
 
         public IEnumerable<VehiclePosition> GetLastKnown(IEnumerable<Vehicle> vehicles)
@@ -43,7 +45,7 @@ namespace FleetPing.Api.Services
                 Longitude = Math.Round(lng, 6),
                 SpeedKph = speed,
                 HeadingDeg = heading,
-                RecordedAt = DateTime.UtcNow,
+                RecordedAt = v.CreatedAt,
                 Source = "mock"
             };
         }
