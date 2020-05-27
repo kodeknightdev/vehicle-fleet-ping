@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -71,9 +72,11 @@ export class VehicleFormComponent implements OnInit {
         const id = this.vehicleId !== null ? this.vehicleId : (created as Vehicle).id;
         this.router.navigate(['/vehicles', id]);
       },
-      () => {
+      (err: HttpErrorResponse) => {
         this.saving = false;
-        this.error = 'Could not save the vehicle.';
+        this.error = err.status === 409
+          ? (err.error && err.error.detail) || 'That plate is already registered.'
+          : 'Could not save the vehicle.';
       }
     );
   }

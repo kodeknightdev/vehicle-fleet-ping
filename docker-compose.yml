@@ -28,12 +28,21 @@ services:
       SeedDemoData: "true"
       Simulator__Enabled: "true"
       Simulator__IntervalSeconds: "10"
+      EnableSwagger: "true"
       Cors__Origins__0: "http://localhost:4200"
       Auth__Users__0__Username: dispatch
       Auth__Users__0__Password: dispatch
       Auth__Users__0__DisplayName: Dispatch Desk
     ports:
       - "5000:80"
+
+  web:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
 
 volumes:
   pgdata:
