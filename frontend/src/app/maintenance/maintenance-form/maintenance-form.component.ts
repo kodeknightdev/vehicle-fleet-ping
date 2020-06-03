@@ -29,7 +29,7 @@ export class MaintenanceFormComponent implements OnInit {
   ngOnInit(): void {
     const log = this.log;
     this.form = this.fb.group({
-      date: [log ? log.date.substring(0, 10) : new Date().toISOString().substring(0, 10), Validators.required],
+      date: [log ? log.date.substring(0, 10) : this.today(), Validators.required],
       type: [log ? log.type : 'OilChange', Validators.required],
       odometerKm: [log ? log.odometerKm : this.currentOdometer, [Validators.required, Validators.min(0)]],
       cost: [log ? log.cost : 0, [Validators.required, Validators.min(0)]],
@@ -48,11 +48,9 @@ export class MaintenanceFormComponent implements OnInit {
       return;
     }
 
-    const value = this.form.value;
-    const payload: Partial<MaintenanceLog> = {
-      ...value,
-      date: new Date(value.date)
-    } as any;
+    // Send the date as a plain yyyy-MM-dd. Turning it into a Date made it UTC midnight,
+    // which showed up as the previous day for anyone west of Greenwich.
+    const payload: Partial<MaintenanceLog> = { ...this.form.value };
 
     this.saving = true;
     this.error = '';
@@ -69,6 +67,12 @@ export class MaintenanceFormComponent implements OnInit {
         () => this.fail()
       );
     }
+  }
+
+  private today(): string {
+    const d = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   }
 
   private done(log: MaintenanceLog): void {
