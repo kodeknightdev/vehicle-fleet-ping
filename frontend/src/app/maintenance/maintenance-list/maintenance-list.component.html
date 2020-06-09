@@ -3,6 +3,16 @@
   <button *ngIf="!showForm" (click)="add()">Add entry</button>
 </div>
 
+<form class="filters" [formGroup]="filters">
+  <select formControlName="type">
+    <option value="">All types</option>
+    <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+  </select>
+  <label>From <input type="date" formControlName="from"></label>
+  <label>To <input type="date" formControlName="to"></label>
+  <a href="" *ngIf="filtered" (click)="$event.preventDefault(); clearFilters()">Clear</a>
+</form>
+
 <app-maintenance-form
   *ngIf="showForm"
   [vehicleId]="vehicleId"
@@ -49,4 +59,6 @@
   </tfoot>
 </table>
 
-<p *ngIf="!loading && !logs.length" class="muted">No maintenance recorded yet.</p>
+<p *ngIf="!loading && !logs.length" class="muted">
+  {{ filtered ? 'No entries match the filters.' : 'No maintenance recorded yet.' }}
+</p>

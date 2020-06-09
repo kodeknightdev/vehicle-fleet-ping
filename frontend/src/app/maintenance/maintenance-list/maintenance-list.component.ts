@@ -1,6 +1,9 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
-import { MaintenanceLog } from '../../core/models';
+import { MAINTENANCE_TYPES, MaintenanceLog } from '../../core/models';
 import { MaintenanceService } from '../../core/services';
 
 @Component({
@@ -8,7 +11,7 @@ import { MaintenanceService } from '../../core/services';
   templateUrl: './maintenance-list.component.html',
   styleUrls: ['./maintenance-list.component.scss']
 })
-export class MaintenanceListComponent implements OnChanges {
+export class MaintenanceListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() vehicleId: number;
   @Input() currentOdometer = 0;
 
@@ -17,10 +20,38 @@ export class MaintenanceListComponent implements OnChanges {
   showForm = false;
   editing: MaintenanceLog | null = null;
 
-  constructor(private maintenanceService: MaintenanceService) { }
+  types = MAINTENANCE_TYPES;
+  filters = this.fb.group({ type: [''], from: [''], to: [''] });
+  private filterSub: Subscription;
+
+  constructor(
+    private fb: FormBuilder,
+    private maintenanceService: MaintenanceService
+  ) { }
+
+  ngOnInit(): void {
+    this.filterSub = this.filters.valueChanges
+      .pipe(debounceTime(250))
+      .subscribe(() => this.load());
+  }
 
   ngOnChanges(): void {
     this.load();
+  }
+
+  ngOnDestroy(): void {
+    if (this.filterSub) {
+      this.filterSub.unsubscribe();
+    }
+  }
+
+  get filtered(): boolean {
+    const f = this.filters.value;
+    return !!(f.type || f.from || f.to);
+  }
+
+  clearFilters(): void {
+    this.filters.setValue({ type: '', from: '', to: '' });
   }
 
   get totalCost(): number {
@@ -32,7 +63,7 @@ export class MaintenanceListComponent implements OnChanges {
       return;
     }
     this.loading = true;
-    this.maintenanceService.list(this.vehicleId).subscribe(logs => {
+    this.maintenanceService.list(this.vehicleId, this.filters.value).subscribe(logs => {
       this.logs = logs;
       this.loading = false;
     });

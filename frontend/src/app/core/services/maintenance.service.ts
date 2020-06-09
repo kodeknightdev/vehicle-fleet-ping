@@ -1,9 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { MaintenanceLog } from '../models';
+import { MaintenanceLog, MaintenanceType } from '../models';
 import { ApiService } from './api.service';
+
+export interface MaintenanceFilter {
+  type?: MaintenanceType | '';
+  from?: string;
+  to?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +19,18 @@ export class MaintenanceService extends ApiService {
     super(http);
   }
 
-  list(vehicleId: number): Observable<MaintenanceLog[]> {
-    return this.http.get<MaintenanceLog[]>(this.logsUrl(vehicleId));
+  list(vehicleId: number, filter: MaintenanceFilter = {}): Observable<MaintenanceLog[]> {
+    let params = new HttpParams();
+    if (filter.type) {
+      params = params.set('type', filter.type);
+    }
+    if (filter.from) {
+      params = params.set('from', filter.from);
+    }
+    if (filter.to) {
+      params = params.set('to', filter.to);
+    }
+    return this.http.get<MaintenanceLog[]>(this.logsUrl(vehicleId), { params });
   }
 
   get(vehicleId: number, id: number): Observable<MaintenanceLog> {
