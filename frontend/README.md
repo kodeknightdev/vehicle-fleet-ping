@@ -1,23 +1,40 @@
-# FleetPingWeb
+# FleetPing web
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.5.
+Angular 9 dashboard for fleet-ping. Generated with Angular CLI 9.0.5.
 
-## Development server
+## Pages
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- **Overview** - fleet counts, how many trackers reported recently, 30 day maintenance spend, vehicles due for service
+- **Map** - Leaflet map of last known positions, refreshed every 10s. Green = moving, yellow = stopped, grey = no GPS in the last 15 min (or mock position)
+- **Vehicles** - list, create/edit, detail with GPS trail (1h / 6h / 24h) and maintenance log (add, edit, delete, filter)
 
-## Code scaffolding
+All pages except login sit behind `AuthGuard`. Credentials are checked against `/api/auth/me` and kept in
+`sessionStorage`; `AuthInterceptor` adds the Basic header to API calls and sends the user back to
+login on a 401.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Layout
 
-## Build
+```
+src/app/
+├── core/           models, api services, auth interceptor/guard, CoreModule
+├── auth/login/
+├── dashboard/
+├── map/            fleet-map, vehicle-trail
+├── maintenance/    maintenance-list, maintenance-form
+└── vehicles/       vehicle-list, vehicle-detail, vehicle-form
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Development
 
-## Running unit tests
+```bash
+npm ci
+npm start        # http://localhost:4200, expects the API on http://localhost:5000
+npm test
+npm run lint
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+The API url comes from `src/environments/environment.ts`. Production builds use `/api`, which the nginx
+config in this folder proxies to the `api` container.
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Leaflet marker images are copied to `assets/leaflet/` by `angular.json`; the map component points
+`L.Icon.Default` at them since the default url detection breaks once the css is bundled.
